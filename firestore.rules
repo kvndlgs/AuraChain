@@ -1,0 +1,117 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Helper function to get user data
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Helper function to check if user has a specific role
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+
+    // Users collection - users can read and write their own profile
+    match /users/{userId} {
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && isOwner(userId);
+      allow delete: if false; // Prevent deletion
+    }
+
+    // Schools collection - admins can manage, all authenticated users can read
+    match /schools/{schoolId} {
+      allow read: if isAuthenticated();
+      allow create: if hasRole('admin');
+      allow update: if hasRole('admin') && resource.data.adminId == request.auth.uid;
+      allow delete: if hasRole('admin') && resource.data.adminId == request.auth.uid;
+    }
+
+    // Teachers collection - teachers can manage their own profile
+    match /teachers/{teacherId} {
+      allow read: if isAuthenticated() &&
+                    (isOwner(teacherId) ||
+                     resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() &&
+                      isOwner(teacherId) &&
+                      request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if false; // Prevent deletion
+    }
+
+    // Students collection - students can read their own profile, teachers can read their students
+    match /students/{studentId} {
+      allow read: if isAuthenticated() &&
+                    (isOwner(studentId) ||
+                     resource.data.userId == request.auth.uid ||
+                     hasRole('teacher'));
+      allow create: if isAuthenticated() &&
+                      isOwner(studentId) &&
+                      request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if false; // Prevent deletion
+    }
+
+    // Default auras (merits) - all authenticated users can read
+    match /meriits/{auraid} {
+      allow read: if isAuthenticated();
+      allow write: if hasRole('admin'); // Only admins can create/modify default auras
+    }
+
+    // Custom auras - teachers can create, all can read school-specific auras
+    match /customauras/{customauraid} {
+      allow read: if isAuthenticated();
+      allow create: if hasRole('teacher') &&
+                      request.resource.data.createdByTeacherId == request.auth.uid;
+      allow update: if hasRole('teacher') &&
+                      resource.data.createdByTeacherId == request.auth.uid;
+      allow delete: if hasRole('teacher') &&
+                      resource.data.createdByTeacherId == request.auth.uid;
+    }
+
+    // Awarded auras - students can read their awards, teachers can read awards they issued and create new ones
+    match /awardedauras/{awardId} {
+      allow read: if isAuthenticated() &&
+                    (resource.data.studentId == request.auth.uid ||
+                     resource.data.issuedByTeacherId == request.auth.uid ||
+                     hasRole('admin'));
+
+      allow create: if isAuthenticated() &&
+                      hasRole('teacher') &&
+                      request.resource.data.issuedByTeacherId == request.auth.uid &&
+                      // Verify teacher exists and is active
+                      exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.isActive == true;
+
+      allow update: if false; // Auras cannot be modified once awarded
+      allow delete: if false; // Auras cannot be deleted
+    }
+
+    // Collections (Phase 2) - read access for school members, write for creators
+    match /collections/{collectionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+                      (hasRole('teacher') || hasRole('admin')) &&
+                      request.resource.data.createdBy == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.createdBy == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.createdBy == request.auth.uid;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

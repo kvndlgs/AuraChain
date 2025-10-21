@@ -15,13 +15,13 @@ import {
   useRequestAirdrop,
   useTransferSol,
 } from './account-data-access'
-import { ellipsify } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { AppAlert } from '@/components/app-alert'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { AppModal } from '@/components/app-modal'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { ellipsify } from '../../lib/utils'
+import { Button } from '../../components/ui/button'
+import { AppAlert } from '../../components/app-alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { AppModal } from '../../components/app-modal'
+import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address })
