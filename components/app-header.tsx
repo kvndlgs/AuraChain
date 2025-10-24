@@ -20,7 +20,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
     <header className="relative z-50 px-4 py-2 bg-neutral-100 dark:bg-neutral-900 dark:text-neutral-400">
       <div className="mx-auto flex justify-between items-center">
         <div className="flex items-baseline gap-4">
-          <Link className="text-xl hover:text-neutral-500 dark:hover:text-white" href="/">
+          <Link className="text-lg font-bold text-primary hover:text-neutral-500 dark:hover:text-white" href="/">
             <span>AuraChain</span>
           </Link>
           <div className="hidden md:flex items-center">
@@ -28,7 +28,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
               {links.map(({ label, path }) => (
                 <li key={path}>
                   <Link
-                    className={`hover:text-neutral-500 dark:hover:text-white ${isActive(path) ? 'text-neutral-500 dark:text-white' : ''}`}
+                    className={`hover:text-neutral-500 leading-normal font-medium dark:hover:text-white ${isActive(path) ? 'text-neutral-500 dark:text-white' : ''}`}
                     href={path}
                   >
                     {label}
@@ -50,7 +50,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
         </div>
 
         {showMenu && (
-          <div className="md:hidden fixed inset-x-0 top-[52px] bottom-0 bg-neutral-100/95 dark:bg-neutral-900/95 backdrop-blur-sm">
+          <div className="md:hidden fixed inset-x-0 top-[52px] bottom-0 bg-background dark:bg-neutral-900/95 backdrop-blur-sm">
             <div className="flex flex-col p-4 gap-4 border-t dark:border-neutral-800">
               <ul className="flex flex-col gap-4">
                 {links.map(({ label, path }) => (

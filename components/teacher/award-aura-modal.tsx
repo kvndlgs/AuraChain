@@ -6,11 +6,13 @@ import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { DEFAULT_AURAS, Aura } from '../../lib/types/aura'
-import { createMockAuraNFT } from '../../lib/solana/mint-aura'
+import { mintAuraNFT } from '../../lib/solana/mint-aura'
 import { useAuth } from '../../contexts/auth-context'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { useCluster } from '../cluster/cluster-data-access'
 import { doc, setDoc, collection } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
-import { Award, Loader2 } from 'lucide-react'
+import { Award, Loader2, Wallet, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 interface Student {
   id: string
@@ -26,12 +28,16 @@ interface AwardAuraModalProps {
 
 export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalProps) {
   const { userProfile } = useAuth()
+  const wallet = useWallet()
+  const { cluster } = useCluster()
   const [step, setStep] = useState(1)
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [selectedAura, setSelectedAura] = useState<Aura | null>(null)
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [mintAddress, setMintAddress] = useState('')
 
   // Initialize auras with IDs
   const auras: Aura[] = DEFAULT_AURAS.map((aura, index) => ({
@@ -46,6 +52,8 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
     setSelectedAura(null)
     setNotes('')
     setError('')
+    setSuccess(false)
+    setMintAddress('')
     onClose()
   }
 
@@ -55,19 +63,27 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
       return
     }
 
+    // Check wallet connection
+    if (!wallet.connected || !wallet.publicKey) {
+      setError('Please connect your wallet to mint NFTs')
+      return
+    }
+
     setLoading(true)
     setError('')
+    setSuccess(false)
 
     try {
-      // Mint NFT (using mock for demo)
-      const mintResult = await createMockAuraNFT({
-        teacherWalletAddress: userProfile.walletAddress || 'mock-teacher-wallet',
-        studentWalletAddress: selectedStudent.walletAddress || 'mock-student-wallet',
+      // Mint NFT on Solana
+      const mintResult = await mintAuraNFT({
+        wallet,
+        studentWalletAddress: selectedStudent.walletAddress || wallet.publicKey.toString(),
         aura: selectedAura,
-        teacherName: userProfile.displayName,
+        teacherName: userProfile.displayName || 'Teacher',
         studentName: selectedStudent.name,
         schoolName: userProfile.schoolId,
         notes,
+        rpcEndpoint: cluster.endpoint,
       })
 
       if (!mintResult.success) {
@@ -82,7 +98,8 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
         studentId: selectedStudent.id,
         studentName: selectedStudent.name,
         issuedByTeacherId: userProfile.uid,
-        teacherName: userProfile.displayName,
+        teacherName: userProfile.displayName || 'Teacher',
+        teacherWallet: wallet.publicKey.toString(),
         schoolId: userProfile.schoolId,
         nftMintAddress: mintResult.mintAddress,
         transactionHash: mintResult.transactionSignature,
@@ -91,10 +108,17 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
         category: selectedAura.category,
         icon: selectedAura.icon,
         color: selectedAura.color,
+        network: cluster.network || 'devnet',
       })
 
-      // Success! Close modal
-      handleClose()
+      // Success!
+      setSuccess(true)
+      setMintAddress(mintResult.mintAddress || '')
+
+      // Auto-close after showing success
+      setTimeout(() => {
+        handleClose()
+      }, 3000)
     } catch (err: any) {
       console.error('Error awarding aura:', err)
       setError(err.message || 'Failed to award aura')
@@ -128,7 +152,40 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
             ))}
           </div>
 
-          {error && <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">{error}</div>}
+          {/* Wallet Connection Warning */}
+          {!wallet.connected && step === 3 && (
+            <div className="flex items-start gap-3 rounded-md bg-yellow-500/15 p-3 text-sm text-yellow-600 dark:text-yellow-500">
+              <Wallet className="h-5 w-5 flex-shrink-0" />
+              <div>
+                <p className="font-medium">Wallet Not Connected</p>
+                <p className="mt-1 text-xs">Please connect your Solana wallet to mint NFTs</p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="flex items-start gap-3 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <AlertCircle className="h-5 w-5 flex-shrink-0" />
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="flex items-start gap-3 rounded-md bg-green-500/15 p-3 text-sm text-green-600 dark:text-green-500">
+              <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="font-medium">Aura Awarded Successfully!</p>
+                <p className="mt-1 text-xs">NFT minted and sent to student</p>
+                {mintAddress && (
+                  <p className="mt-2 font-mono text-xs">
+                    Mint: {mintAddress.slice(0, 8)}...{mintAddress.slice(-8)}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Step 1: Select Student */}
           {step === 1 && (
@@ -238,19 +295,28 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
               </div>
 
               <div className="flex gap-3">
-                <Button onClick={handleClose} variant="outline" className="flex-1">
+                <Button onClick={handleClose} variant="outline" className="flex-1" disabled={loading}>
                   Cancel
                 </Button>
-                <Button onClick={handleAwardAura} disabled={loading} className="flex-1">
+                <Button
+                  onClick={handleAwardAura}
+                  disabled={loading || !wallet.connected || success}
+                  className="flex-1"
+                >
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Awarding...
+                      Minting NFT...
+                    </>
+                  ) : success ? (
+                    <>
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Awarded!
                     </>
                   ) : (
                     <>
                       <Award className="mr-2 h-4 w-4" />
-                      Award Aura
+                      Award Aura & Mint NFT
                     </>
                   )}
                 </Button>

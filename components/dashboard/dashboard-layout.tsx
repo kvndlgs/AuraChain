@@ -63,9 +63,8 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
           <div className="flex items-center justify-between border-b p-4">
             <Link href="/" className="flex items-center gap-2">
               <div className="flex">
-                 <img src='/aura-transparent.png' alt='aura' className='w-10 p-1' />
+                 <img src='/aura-icon.webp' alt='aura' className='w-14 p-1' />
               </div>
-              <span className="text-lg font-bold">AuraChain</span>
             </Link>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
               <X className="h-5 w-5" />
