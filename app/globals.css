@@ -29,6 +29,7 @@
   --font-die-regular: 'TestDieGrotesk', ui-sans-serif, system-ui, sans-serif;
   --font-die-medium: 'TestDieGrotesk', ui-sans-serif, system-ui, sans-serif;
   --font-die-heavy: 'TestDieGrotesk', ui-sans-serif, system-ui, sans-serif;
+  --color-uno-reverse: var(--uno-reverse);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -81,6 +82,7 @@
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(46.756% 0.02656 196.391);
   --accent: oklch(83.121% 0.1222 189.209);
+   --uno-reverse: hsl(253, 71%, 80%);
   --accent-foreground: oklch(38.71% 0.02155 196.41);
   --destructive: oklch(63.957% 0.15017 26.049);
   --border: oklch(91.279% 0.00863 197.669);
@@ -109,6 +111,7 @@
   --popover: oklch(38.71% 0.02155 196.41);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(83.121% 0.1222 189.209);
+    --uno-reverse: hsl(253, 71%, 80%);
   --primary-foreground: oklch(38.71% 0.02155 196.41);
   --secondary: oklch(38.71% 0.02155 196.41);
   --secondary-foreground: oklch(0.985 0 0);

@@ -62,8 +62,9 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
           {/* Logo & Close Button */}
           <div className="flex items-center justify-between border-b p-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex">
-                 <img src='/aura-icon.webp' alt='aura' className='w-14 p-1' />
+              <div className="flex items-center">
+                 <img src='2x/favicon-light_1@2x.png' alt='aura' className='w-12 p-1' />
+                 <p className="text-md font-die font-bold text-primary tracking-wider"> AuraChain </p>
               </div>
             </Link>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
