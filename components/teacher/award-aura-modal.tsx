@@ -13,6 +13,7 @@ import { useCluster } from '../cluster/cluster-data-access'
 import { doc, setDoc, collection } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
 import { Award, Loader2, Wallet, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { trackAuraAwarded, trackNFTMinted } from '../../lib/analytics'
 
 interface Student {
   id: string
@@ -115,6 +116,19 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
       setSuccess(true)
       setMintAddress(mintResult.mintAddress || '')
 
+      // Track analytics
+      trackAuraAwarded({
+        auraType: selectedAura.name,
+        category: selectedAura.category,
+        recipientRole: 'student',
+      })
+
+      trackNFTMinted({
+        auraType: selectedAura.name,
+        mintAddress: mintResult.mintAddress,
+        success: true,
+      })
+
       // Auto-close after showing success
       setTimeout(() => {
         handleClose()
@@ -122,6 +136,12 @@ export function AwardAuraModal({ open, onClose, students = [] }: AwardAuraModalP
     } catch (err: any) {
       console.error('Error awarding aura:', err)
       setError(err.message || 'Failed to award aura')
+
+      // Track failed minting
+      trackNFTMinted({
+        auraType: selectedAura?.name || 'unknown',
+        success: false,
+      })
     } finally {
       setLoading(false)
     }
