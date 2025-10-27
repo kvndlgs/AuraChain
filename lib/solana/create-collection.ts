@@ -1,16 +1,12 @@
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import {
-  createNft,
-  mplTokenMetadata,
-  CreateNftInput
-} from '@metaplex-foundation/mpl-token-metadata'
+import { createNft, mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata'
 import {
   generateSigner,
   percentAmount,
   signerIdentity,
   publicKey as umiPublicKey,
   Umi,
-  TransactionBuilderSendAndConfirmOptions
+  TransactionBuilderSendAndConfirmOptions,
 } from '@metaplex-foundation/umi'
 import { createSignerFromWalletAdapter } from '@metaplex-foundation/umi-signer-wallet-adapters'
 import { WalletAdapter } from '@solana/wallet-adapter-base'
@@ -35,9 +31,7 @@ interface CreateCollectionResult {
  * Creates an NFT collection on Solana
  * This collection will be the parent for all aura NFTs
  */
-export async function createAuraCollection(
-  params: CreateCollectionParams
-): Promise<CreateCollectionResult> {
+export async function createAuraCollection(params: CreateCollectionParams): Promise<CreateCollectionResult> {
   try {
     const {
       wallet,
@@ -79,7 +73,7 @@ export async function createAuraCollection(
               value: 'Collection',
             },
           ],
-        })
+        }),
       ).toString('base64')}`,
       sellerFeeBasisPoints: percentAmount(0), // 0% royalty
       isCollection: true, // Mark this as a collection

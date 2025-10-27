@@ -41,7 +41,9 @@ export default function AdminAurasPage() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">Edit</Button>
+                  <Button variant="outline" size="sm">
+                    Edit
+                  </Button>
                   <Button variant="ghost" size="sm" disabled={aura.isDefault}>
                     {aura.isDefault ? 'Default' : 'Delete'}
                   </Button>
@@ -66,7 +68,7 @@ export default function AdminAurasPage() {
           <div className="rounded-lg border bg-card p-6">
             <p className="text-sm text-muted-foreground">Subject-Specific</p>
             <p className="mt-2 text-3xl font-bold">
-              {DEFAULT_AURAS.filter((a) => a.category === 'subject-specific').length}
+              {/*  {DEFAULT_AURAS.filter((a) => a.category === 'subject-specific').length} */}
             </p>
           </div>
         </div>
