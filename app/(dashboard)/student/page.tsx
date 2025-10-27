@@ -45,9 +45,9 @@ export default function StudentDashboard() {
 
   return (
     <DashboardLayout navItems={studentNavItems} title="My Collection">
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Welcome Banner */}
-        <div className="rounded-lg border bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+        <div className="rounded-lg border bg-gradient-to-r from-primary/10 to-primary/5 p-4">
           <h2 className="text-2xl font-bold">Welcome to Your Collection!</h2>
           <p className="mt-2 text-muted-foreground">
             Collect auras from your teachers and track your achievements
@@ -55,8 +55,8 @@ export default function StudentDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border bg-card p-6">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Auras</p>
@@ -64,10 +64,10 @@ export default function StudentDashboard() {
               </div>
               <Award className="h-8 w-8 text-muted-foreground" />
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">All time collected</p>
+            <p className="mt-3 text-xs text-muted-foreground">All time collected</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6">
+          <div className="rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">This Month</p>
@@ -75,10 +75,10 @@ export default function StudentDashboard() {
               </div>
               <TrendingUp className="h-8 w-8 text-muted-foreground" />
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">Auras this month</p>
+            <p className="mt-3 text-xs text-muted-foreground">Auras this month</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6">
+          <div className="rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Categories</p>
@@ -86,10 +86,10 @@ export default function StudentDashboard() {
               </div>
               <Target className="h-8 w-8 text-muted-foreground" />
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">Different types</p>
+            <p className="mt-3 text-xs text-muted-foreground">Different types</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6">
+          <div className="rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Rank</p>
@@ -97,23 +97,23 @@ export default function StudentDashboard() {
               </div>
               <Star className="h-8 w-8 text-muted-foreground" />
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">In your class</p>
+            <p className="mt-3 text-xs text-muted-foreground">In your class</p>
           </div>
         </div>
 
         {/* Aura Collection */}
         <div className="rounded-lg border bg-card">
-          <div className="border-b p-6">
+          <div className="border-b p-4">
             <h2 className="text-lg font-semibold">Your Aura Collection</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             ) : auras.length === 0 ? (
               <div className="py-12 text-center text-muted-foreground">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <Award className="h-8 w-8 text-primary" />
                 </div>
                 <p className="text-lg font-medium">No auras yet!</p>
@@ -121,7 +121,7 @@ export default function StudentDashboard() {
                 <p className="mt-1 text-sm">Check back soon to see your collection grow!</p>
               </div>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {auras.map((aura) => (
                   <AuraBadge key={aura.id} aura={aura} onClick={() => handleAuraClick(aura)} />
                 ))}
@@ -133,14 +133,14 @@ export default function StudentDashboard() {
         {/* Recent Activity */}
         {auras.length > 0 && (
           <div className="rounded-lg border bg-card">
-            <div className="border-b p-6">
+            <div className="border-b p-4">
               <h2 className="text-lg font-semibold">Recent Activity</h2>
             </div>
             <div className="divide-y">
               {auras.slice(0, 5).map((aura) => (
                 <div
                   key={aura.id}
-                  className="flex items-center gap-4 p-4 transition-colors hover:bg-accent"
+                  className="flex items-center gap-3 p-3 transition-colors hover:bg-accent"
                 >
                   <div
                     className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-2xl"

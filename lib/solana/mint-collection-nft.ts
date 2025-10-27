@@ -127,8 +127,6 @@ export async function mintCollectionAuraNFT(
       throw new Error('Collection not created yet. Please create a collection first.')
     }
 
-    console.log('Minting NFT to collection:', collectionAddress)
-
     // Create metadata
     const metadata = createAuraMetadata({
       aura,
@@ -152,9 +150,6 @@ export async function mintCollectionAuraNFT(
     // Generate mint address
     const mint = generateSigner(umi)
 
-    console.log('Creating NFT...')
-    console.log('Mint address:', mint.publicKey)
-
     // Create NFT as part of collection
     const createNftTx = await createNft(umi, {
       mint,
@@ -172,8 +167,6 @@ export async function mintCollectionAuraNFT(
       ],
     }).sendAndConfirm(umi)
 
-    console.log('NFT created, verifying collection...')
-
     // Verify the NFT as part of the collection
     try {
       await verifyCollectionV1(umi, {
@@ -181,14 +174,12 @@ export async function mintCollectionAuraNFT(
         collectionMint: umiPublicKey(collectionAddress),
         authority: signer,
       }).sendAndConfirm(umi)
-      console.log('Collection verified!')
     } catch (err) {
       console.warn('Collection verification failed (this is okay for demo):', err)
     }
 
     // Transfer NFT to student if student wallet is different from teacher
     if (studentWalletAddress !== wallet.publicKey.toBase58()) {
-      console.log('Transferring NFT to student...')
       try {
         await transferV1(umi, {
           mint: mint.publicKey,
@@ -197,7 +188,6 @@ export async function mintCollectionAuraNFT(
           destinationOwner: umiPublicKey(studentWalletAddress),
           tokenStandard: 'NonFungible' as any,
         }).sendAndConfirm(umi)
-        console.log('NFT transferred to student!')
       } catch (err) {
         console.warn('Transfer failed (student will need to claim):', err)
       }

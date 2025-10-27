@@ -62,9 +62,6 @@ export async function createAuraCollection(
     // Generate collection mint address
     const collectionMint = generateSigner(umi)
 
-    console.log('Creating collection NFT...')
-    console.log('Collection mint address:', collectionMint.publicKey)
-
     // Create collection NFT
     const createCollectionTx = await createNft(umi, {
       mint: collectionMint,
@@ -89,9 +86,6 @@ export async function createAuraCollection(
     }).sendAndConfirm(umi)
 
     const signature = Buffer.from(createCollectionTx.signature).toString('base64')
-
-    console.log('Collection created successfully!')
-    console.log('Signature:', signature)
 
     return {
       success: true,

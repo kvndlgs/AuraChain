@@ -23,9 +23,27 @@ service cloud.firestore {
       return isAuthenticated() && getUserData().role == role;
     }
 
+    // Convenience helper functions
+    function isTeacher() {
+      return hasRole('teacher');
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isStudent() {
+      return hasRole('student');
+    }
+
     // Users collection - users can read and write their own profile
+    // Teachers can read student profiles, admins can read all
     match /users/{userId} {
-      allow read: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && (
+        isOwner(userId) ||
+        isTeacher() ||
+        isAdmin()
+      );
       allow create: if isAuthenticated() && isOwner(userId);
       allow update: if isAuthenticated() && isOwner(userId);
       allow delete: if false; // Prevent deletion

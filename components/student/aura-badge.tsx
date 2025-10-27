@@ -2,6 +2,7 @@
 
 import { AwardedAura } from '../../lib/types/aura'
 import { formatDistanceToNow } from 'date-fns'
+import { AuraIcon } from '../ui/aura-icon'
 
 interface AuraBadgeProps {
   aura: AwardedAura
@@ -23,12 +24,12 @@ export function AuraBadge({ aura, onClick }: AuraBadgeProps) {
       {/* Aura Icon */}
       <div className="mb-4 flex items-center justify-center">
         <div
-          className="flex h-16 w-16 items-center justify-center rounded-full text-4xl transition-transform group-hover:scale-110"
+          className="flex h-16 w-16 items-center justify-center rounded-full transition-transform group-hover:scale-110"
           style={{
             backgroundColor: `${aura.color}20`,
           }}
         >
-          {aura.icon}
+          <AuraIcon icon={aura.icon} size={40} />
         </div>
       </div>
 

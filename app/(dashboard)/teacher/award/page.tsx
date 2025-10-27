@@ -1,10 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DashboardLayout, teacherNavItems } from '../../../../components/dashboard/dashboard-layout'
 import { Button } from '../../../../components/ui/button'
 import { AwardAuraModal } from '../../../../components/teacher/award-aura-modal'
-import { Award, Users, Plus } from 'lucide-react'
+import { Award, Users, Plus, ExternalLink } from 'lucide-react'
+import { useAuth } from '../../../../contexts/auth-context'
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import { db } from '../../../../lib/firebase'
+import { getTeacherAwardedAuras } from '../../../../services/teacherAuraService'
+import { AwardedAura } from '../../../../lib/types/aura'
 
 // Mock students for demo
 const MOCK_STUDENTS = [
@@ -18,6 +23,49 @@ const MOCK_STUDENTS = [
 
 export default function AwardAuraPage() {
   const [modalOpen, setModalOpen] = useState(false)
+  const [students, setStudents] = useState(MOCK_STUDENTS)
+  const [recentAuras, setRecentAuras] = useState<AwardedAura[]>([])
+  const { userProfile } = useAuth()
+
+  async function loadRecentAwards() {
+    if (!userProfile?.uid) return
+    try {
+      const fetchedAuras = await getTeacherAwardedAuras(userProfile.uid, 5)
+      setRecentAuras(fetchedAuras)
+    } catch (error) {
+      console.error('Error loading recent awards:', error)
+    }
+  }
+
+  useEffect(() => {
+    async function loadStudents() {
+      try {
+        // Fetch real students from Firestore
+        const studentsRef = collection(db, 'users')
+        const q = query(studentsRef, where('role', '==', 'student'))
+        const snapshot = await getDocs(q)
+
+        const realStudents = snapshot.docs.map(doc => {
+          const data = doc.data()
+          return {
+            id: doc.id, // Use Firebase UID
+            name: data.displayName || 'Student',
+            walletAddress: data.walletAddress || undefined,
+          }
+        })
+
+        // Combine real students with mock students, prioritizing real ones
+        if (realStudents.length > 0) {
+          setStudents([...realStudents, ...MOCK_STUDENTS])
+        }
+      } catch (error) {
+        console.error('Error loading students:', error)
+      }
+    }
+
+    loadStudents()
+    loadRecentAwards()
+  }, [userProfile])
 
   return (
     <DashboardLayout navItems={teacherNavItems} title="Award Auras">
@@ -59,7 +107,7 @@ export default function AwardAuraPage() {
             </Button>
           </div>
           <div className="divide-y">
-            {MOCK_STUDENTS.map((student) => (
+            {students.map((student) => (
               <div key={student.id} className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -67,7 +115,9 @@ export default function AwardAuraPage() {
                   </div>
                   <div>
                     <p className="font-medium">{student.name}</p>
-                    <p className="text-xs text-muted-foreground">{student.walletAddress.slice(0, 16)}...</p>
+                    {student.walletAddress && (
+                      <p className="text-xs text-muted-foreground">{student.walletAddress.slice(0, 16)}...</p>
+                    )}
                   </div>
                 </div>
                 <Button
@@ -87,20 +137,60 @@ export default function AwardAuraPage() {
 
         {/* Recent Awards */}
         <div className="rounded-lg border bg-card">
-          <div className="border-b p-6">
+          <div className="border-b p-4">
             <h3 className="font-semibold">Recent Awards</h3>
           </div>
-          <div className="p-6">
-            <div className="text-center text-muted-foreground">
-              <Award className="mx-auto h-12 w-12 opacity-20" />
-              <p className="mt-2">No auras awarded yet</p>
-              <p className="mt-1 text-sm">Your recent awards will appear here</p>
-            </div>
+          <div className="p-4">
+            {recentAuras.length === 0 ? (
+              <div className="text-center text-muted-foreground">
+                <Award className="mx-auto h-12 w-12 opacity-20" />
+                <p className="mt-2">No auras awarded yet</p>
+                <p className="mt-1 text-sm">Your recent awards will appear here</p>
+              </div>
+            ) : (
+              <div className="divide-y">
+                {recentAuras.map((aura) => (
+                  <div key={aura.id} className="flex items-center gap-3 py-3">
+                    <div
+                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-xl"
+                      style={{ backgroundColor: `${aura.color}20` }}
+                    >
+                      {aura.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{aura.auraName}</p>
+                      <p className="text-sm text-muted-foreground truncate">
+                        To {aura.studentName} • {new Date(aura.awardedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    {aura.nftMintAddress && (
+                      <a
+                        href={`https://explorer.solana.com/address/${aura.nftMintAddress}?cluster=devnet`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-primary hover:underline"
+                      >
+                        View NFT
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      <AwardAuraModal open={modalOpen} onClose={() => setModalOpen(false)} students={MOCK_STUDENTS} />
+      <AwardAuraModal
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          // Reload recent awards after modal closes
+          loadRecentAwards()
+        }}
+        students={students}
+      />
     </DashboardLayout>
   )
 }

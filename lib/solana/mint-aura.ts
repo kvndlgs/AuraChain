@@ -146,13 +146,6 @@ export async function mintAuraNFT(params: MintAuraParams): Promise<MintResult> {
       // Generate a new mint address for the NFT
       const mint = generateSigner(umi)
 
-      console.log('Minting NFT with params:', {
-        mintAddress: mint.publicKey,
-        teacher: wallet.publicKey.toString(),
-        student: studentWalletAddress,
-        auraName: aura.name,
-      })
-
       // Build the create NFT instruction
       const builder = createNft(umi, {
         mint,
@@ -178,11 +171,6 @@ export async function mintAuraNFT(params: MintAuraParams): Promise<MintResult> {
         confirm: {
           commitment: 'confirmed',
         },
-      })
-
-      console.log('NFT minted successfully:', {
-        mintAddress: mint.publicKey,
-        signature: result.signature,
       })
 
       // Convert signature bytes to base58

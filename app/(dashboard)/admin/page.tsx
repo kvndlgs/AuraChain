@@ -1,23 +1,23 @@
 'use client'
 
 import { DashboardLayout, adminNavItems } from '../../../components/dashboard/dashboard-layout'
-import { School, Users, Award, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react'
+import { School, Users, Award, TrendingUp, CheckCircle } from 'lucide-react'
 import { Button } from '../../../components/ui/button'
 import Link from 'next/link'
 
 export default function AdminDashboard() {
   return (
     <DashboardLayout navItems={adminNavItems} title="Admin Dashboard">
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Welcome Banner */}
-        <div className="rounded-lg border bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+        <div className="rounded-lg border bg-linear-to-r from-primary/10 to-primary/5 p-4">
           <h2 className="text-2xl font-bold">Admin Dashboard</h2>
           <p className="mt-2 text-muted-foreground">Manage schools, teachers, students, and system settings</p>
         </div>
 
         {/* System Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-lg border bg-card p-6">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-lg border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Schools</p>
