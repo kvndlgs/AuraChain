@@ -7,6 +7,28 @@ import React from 'react'
 export const metadata: Metadata = {
   title: 'AuraChain',
   description: 'Blockchain-powered student recognition platform',
+  openGraph: {
+    title: 'AuraChain',
+    description: 'Blockchain-powered student recognition platform',
+    url: 'https://aura-chain.vercel.app',
+    siteName: 'AuraChain',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'AuraChain',
+      },
+    ],
+    locale: 'en-US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AuraChain',
+    description: 'Blockchain-powered student recognition platform',
+    images: ['/og-image.png'],
+  },
 }
 
 const links: { label: string; path: string }[] = [
