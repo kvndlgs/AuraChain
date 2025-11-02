@@ -10,7 +10,7 @@ export default function AdminDashboard() {
     <DashboardLayout navItems={adminNavItems} title="Admin Dashboard">
       <div className="space-y-4">
         {/* Welcome Banner */}
-        <div className="rounded-lg border bg-linear-to-r from-primary/10 to-primary/5 p-4">
+        <div className="rounded-lg border bg-linear-to-r from-brand/10 to-brand/50 p-4">
           <h2 className="text-2xl font-bold">Admin Dashboard</h2>
           <p className="mt-2 text-muted-foreground">Manage schools, teachers, students, and system settings</p>
         </div>
@@ -123,33 +123,33 @@ export default function AdminDashboard() {
           <div className="divide-y">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success-500" />
                 <div>
                   <p className="font-medium">Firebase Connection</p>
                   <p className="text-sm text-muted-foreground">All services operational</p>
                 </div>
               </div>
-              <span className="text-sm text-green-500">Active</span>
+              <span className="text-sm text-success-500">Active</span>
             </div>
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success-500" />
                 <div>
                   <p className="font-medium">Solana Network</p>
                   <p className="text-sm text-muted-foreground">Connected to devnet</p>
                 </div>
               </div>
-              <span className="text-sm text-green-500">Active</span>
+              <span className="text-sm text-success-500">Active</span>
             </div>
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success-500" />
                 <div>
                   <p className="font-medium">Authentication</p>
                   <p className="text-sm text-muted-foreground">OAuth providers enabled</p>
                 </div>
               </div>
-              <span className="text-sm text-green-500">Active</span>
+              <span className="text-sm text-success-50">Active</span>
             </div>
           </div>
         </div>

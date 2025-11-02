@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DashboardLayout, teacherNavItems } from '../../../components/dashboard/dashboard-layout'
 import { Button } from '../../../components/ui/button'
 import Link from 'next/link'
 import { Award, Users, BookOpen, TrendingUp, Plus, Loader2, ExternalLink } from 'lucide-react'
@@ -36,7 +35,6 @@ export default function TeacherDashboard() {
   }, [userProfile])
 
   return (
-    <DashboardLayout navItems={teacherNavItems} title="Dashboard">
       <div className="space-y-4">
         {/* Quick Stats */}
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -185,6 +183,5 @@ export default function TeacherDashboard() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
   )
 }

@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { AppProviders } from '../components/app-providers'
 import { AppLayout } from '../components/app-layout'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import React from 'react'
 
 export const metadata: Metadata = {
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
     siteName: 'AuraChain',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://aura-chain.vercel.app/og-image.png',
         width: 1200,
         height: 630,
         alt: 'AuraChain',
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AuraChain',
     description: 'Blockchain-powered student recognition platform',
-    images: ['/og-image.png'],
+    images: ['https://aura-chain.vercel.app/og-image.png'],
   },
 }
 
@@ -44,6 +46,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AppProviders>
           <AppLayout links={links}>{children}</AppLayout>
         </AppProviders>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

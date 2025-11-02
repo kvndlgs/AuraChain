@@ -29,7 +29,7 @@ export function DashboardFeature() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center px-2">
       <div className="max-w-3xl text-center">
         <h1 className="mb-4 text-5xl font-bold tracking-tight sm:text-6xl">AuraChain</h1>
         <p className="mb-2 text-xl text-muted-foreground">From classroom to forever</p>
@@ -37,7 +37,7 @@ export function DashboardFeature() {
           Digital achievement badges that teachers award, kids collect, and own on the blockchain
         </p>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
           <Button asChild size="lg">
             <Link href="/signup">Get Started</Link>
           </Button>
@@ -46,7 +46,7 @@ export function DashboardFeature() {
           </Button>
         </div>
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-3">
+        <div className="mt-16 grid gap-2 sm:grid-cols-3">
           <div className="rounded-lg border bg-card p-6">
             <div className="mb-2 text-3xl">⭐</div>
             <h3 className="mb-2 font-semibold">For Teachers</h3>

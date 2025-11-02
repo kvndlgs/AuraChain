@@ -52,3 +52,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Figma exports (regenerate from plugin)
+design-tokens.tokens.json
+design-tokens-snippet.txt
+design-tokens.config.js
+figma-file.json
+figma-styles.json
+figma-variables.json

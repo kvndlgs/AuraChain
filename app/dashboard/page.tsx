@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '../../contexts/auth-context'
 import { useRouter } from 'next/navigation'
+import { LogoLoader } from '@/components/logo-loader'
 
 export default function DashboardRedirect() {
   const { userProfile, loading } = useAuth()
@@ -34,10 +35,7 @@ export default function DashboardRedirect() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-        <p className="mt-4 text-muted-foreground">Redirecting to your dashboard...</p>
-      </div>
+      <LogoLoader size={64} />
     </div>
   )
 }

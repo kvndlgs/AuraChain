@@ -5,18 +5,7 @@ import { useAuth } from '../../contexts/auth-context'
 import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import Link from 'next/link'
-import {
-  LayoutDashboard,
-  Users,
-  Award,
-  Settings,
-  LogOut,
-  School,
-  BookOpen,
-  BarChart3,
-  Menu,
-  X,
-} from 'lucide-react'
+import { LayoutDashboard, Users, Award, Settings, LogOut, School, BookOpen, BarChart3, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
 interface NavItem {
@@ -46,94 +35,16 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
   }
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background w-full">
       {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
 
       {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-card transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex h-full flex-col">
-          {/* Logo & Close Button */}
-          <div className="flex items-center justify-between border-b p-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex items-center">
-                 <img src='2x/favicon-light_1@2x.png' alt='aura' className='w-12 p-1' />
-                 <p className="text-md font-die font-bold text-primary tracking-wider"> AuraChain </p>
-              </div>
-            </Link>
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* User Info */}
-          <div className="border-b p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                {userProfile.displayName.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="truncate font-medium">{userProfile.displayName}</p>
-                <p className="truncate text-xs text-muted-foreground capitalize">{userProfile.role}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-1">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Settings & Logout */}
-          <div className="border-t p-4">
-            <div className="space-y-1">
-              <Link
-                href="/settings"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </aside>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden w-full">
         {/* Top Bar */}
         <header className="flex items-center justify-between border-b bg-card px-4 py-3 lg:px-6">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(true)}>
-              <Menu className="h-5 w-5" />
-            </Button>
             <h1 className="text-xl font-semibold">{title}</h1>
           </div>
 
@@ -146,7 +57,7 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 lg:p-2">{children}</main>
       </div>
     </div>
   )

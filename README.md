@@ -8,7 +8,7 @@
 
 Blockchain-powered student recognition platform transforming classroom achievements into permanent Solana NFTs
 
-[Live Demo](https://aura-chain-i38w.vercel.app) • [Video Pitch](https://youtube.com/watch?v=sDsPfd2_i08) • [GitHub](https://github.com/kvndlgs/aurachain)
+[Live Demo](https://aura-chain-138w.vercel.app/) • [Video Pitch](https://youtube.com/watch?v=sDsPfd2_i08) • [GitHub](https://github.com/kvndlgs/aurachain)
 
 ---
 
