@@ -17,7 +17,6 @@ const eslintConfig = [
     'error',
     'react/no-unescaped-entities',
     'react-hooks/exhaustive-deps',
-    '@typescript-eslint/no-explicit-any',
   ),
 ]
 
